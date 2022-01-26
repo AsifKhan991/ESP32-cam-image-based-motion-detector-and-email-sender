@@ -2,11 +2,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESP_Mail_Client.h>
-
-//#include <EMailSender.h>
-
 #include <FS.h>
-#include "SD_MMC.h"
 #include <EloquentArduino.h>
 #include <eloquentarduino/io/serial_print.h>
 #include <eloquentarduino/vision/camera/ESP32Camera.h>
@@ -43,8 +39,8 @@ IO::Writers::JpegWriter<W, H> jpegWriter;
 
 int img_no=0;
 
-const char* ssid = "J.A.R.V.I.S";
-const char* password = "imaginedragonEP";
+const char* ssid = "your ssid";
+const char* password = "your pass";
 
 uint8_t connection_state = 0;
 uint16_t reconnect_interval = 10000;
@@ -59,16 +55,14 @@ uint16_t reconnect_interval = 10000;
 #define SMTP_PORT esp_mail_smtp_port_587
 
 /* The log in credentials */
-#define AUTHOR_EMAIL "agent007.homeguard@gmail.com"
-#define AUTHOR_PASSWORD "eknihbpbwyafmvrv"
+#define AUTHOR_EMAIL "sender_account@gmail.com"
+#define AUTHOR_PASSWORD "pass"
 
 /* The SMTP Session object used for Email sending */
 SMTPSession smtp;
 
 /* Callback function to get the Email sending status */
 void smtpCallback(SMTP_Status status);
-
-//EMailSender emailSend("agent007.homeguard@gmail.com", "eknihbpbwyafmvrv");
 
 void capture();
 
@@ -90,13 +84,6 @@ void setup() {
   Serial.print("Got IP address: ");
   Serial.println(WiFi.localIP());
 
-
-  /*if (!SD_MMC.begin()) {
-    Serial.println("Card Mount Failed");
-  }*/
-  
-  pinMode(4,OUTPUT);
-  digitalWrite(4,0);
   
   delay(1000);
   camera.begin(FRAME_SIZE);
@@ -108,7 +95,7 @@ void setup() {
 
   
   delay(1000);
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 5; i++) { //taking 5 dummy shots to make the camera image stable after boot
     capture();
   }
 
@@ -131,14 +118,8 @@ void loop() {
 
   if (motion.triggered()) {
     Serial.println("Motion detected");
-    // uncomment to save to disk
-    //writeFile(SD_MMC);
     sendmail();
-    //send_mail();
-
   }
-
-  //delay(30);
 }
 
 
@@ -148,7 +129,7 @@ void sendmail() {
   size_t jpg_size;
   
     // Convert the RAW image into JPG
-    // The parameter "31" is the JPG quality. Higher is better.
+    // The parameter "31" is the JPG quality. Higher is better. But keep in mind that heap memory requirement also increases 
   fmt2jpg(frame->buf, frame->len, frame->width, frame->height, frame->format, 31, &jpg_buf, &jpg_size);
   printf("Converted JPG size: %d bytes \n", jpg_size);
   
@@ -166,12 +147,6 @@ void sendmail() {
   session.server.port = SMTP_PORT;
   session.login.email = AUTHOR_EMAIL;
   session.login.password = AUTHOR_PASSWORD;
-  //session.login.user_domain = F("mydomain.net");
-
-  /* Set the NTP config time */
-  /*session.time.ntp_server = F("pool.ntp.org,time.nist.gov");
-  session.time.gmt_offset = 3;
-  session.time.day_light_offset = 0;*/
 
   /* Declare the message class */
   SMTP_Message message;
@@ -179,18 +154,15 @@ void sendmail() {
   /* Enable the chunked data transfer with pipelining for large message if server supported */
   message.enable.chunking = true;
 
-
   message.sender.email = AUTHOR_EMAIL;
 
-  message.subject = F("Motion alert");
-  message.addRecipient(F("asifKhan991"), F("ask150079@gmail.com"));
-  String textMsg = "room1";
+  message.subject = F("Motion detected!");
+  message.addRecipient(F("recipient_name"), F("recipient@gmail.com"));
+  String textMsg = "Bed room";
   message.text.content = textMsg;
   message.text.charSet = F("us-ascii");
   message.text.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
   message.priority = esp_mail_smtp_priority::esp_mail_smtp_priority_normal;
-  //message.addHeader(F("Message-ID: <ask150079@gmail.com>"));
-
   /* The attachment data item */
   SMTP_Attachment att;
 
@@ -200,17 +172,16 @@ void sendmail() {
   */
   att.descr.filename = F("capture.jpg");
   att.descr.mime = F("image/jpg");
-  //att.file.path = F("/capture.jpg");
 
   att.blob.data = jpg_buf;
   att.blob.size = jpg_size;
-  //att.file.storage_type = esp_mail_file_storage_type_sd;
+
   att.descr.transfer_encoding = Content_Transfer_Encoding::enc_base64;
   message.addAttachment(att);
 
   ESP_MAIL_PRINTF("Free Heap: %d\n", MailClient.getFreeHeap());
   Serial.println("attached");
-  //ESP_MAIL_PRINTF("Free Heap: %d\n", MailClient.getFreeHeap());
+
   if (!smtp.connect(&session))
     return;
   
