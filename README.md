@@ -10,9 +10,17 @@ Board selection in arduino IDE:<br>(for port selction,  select your FTDI program
 
 ![alt text](https://github.com/AsifKhan991/ESP32_cam_image_based_motion_detector_and_email_sender/blob/main/board%20settings.PNG?raw=true)
 
+How the mail looks like:
+
+![alt text](https://github.com/AsifKhan991/ESP32_cam_image_based_motion_detector_and_email_sender/blob/main/sample1.PNG?raw=true)
+
+How the motion triggering image looks like:
+
+![alt text](https://github.com/AsifKhan991/ESP32_cam_image_based_motion_detector_and_email_sender/blob/main/capture.jpg?raw=true)
+
 Note: 
   1) It's better to power up the esp32-cam module with seperate power source or it might cause brownout while processing frames
-  2) Make sure your isp isn't blocking connection to smtp server.!
+  2) Make sure your ISP isn't blocking connection to smtp server!
   3) Don't exceed frame quality of SVGA
   4) Jpeg conversion quality in line 133 effects the heap memory required to store the image
   5) Becareful of heap memory usage as smptp ssl connection depends on it. Less memory might cause problem when handling ssl connection. 
