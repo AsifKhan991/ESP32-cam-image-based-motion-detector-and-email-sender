@@ -130,7 +130,7 @@ void sendmail() {
   
     // Convert the RAW image into JPG
     // The parameter "31" is the JPG quality. Higher is better. But keep in mind that heap memory requirement also increases 
-  fmt2jpg(frame->buf, frame->len, frame->width, frame->height, frame->format, 31, &jpg_buf, &jpg_size);
+  fmt2jpg(frame->buf, frame->len, frame->width, frame->height, frame->format, 31, &jpg_buf, &jpg_size); // converting rgb565 frame to JPEG frame, frame stored in jpg_buf
   printf("Converted JPG size: %d bytes \n", jpg_size);
   
   ESP_MAIL_PRINTF("Free Heap: %d\n", MailClient.getFreeHeap());
@@ -167,8 +167,7 @@ void sendmail() {
   SMTP_Attachment att;
 
   /** Set the inline image info e.g.
-     file name, MIME type, file path, file storage type,
-     transfer encoding and content encoding
+     file name, MIME type and transfer encoding
   */
   att.descr.filename = F("capture.jpg");
   att.descr.mime = F("image/jpg");
