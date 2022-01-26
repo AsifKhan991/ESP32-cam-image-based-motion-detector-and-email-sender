@@ -4,6 +4,12 @@
 ### board installation link : https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
 ### library required : [EloquentArduino](https://github.com/eloquentarduino/EloquentArduino), [ESP mail client](https://github.com/mobizt/ESP-Mail-Client)
 
+
+
+Board selection in arduino IDE:<br>(for port selction,  select your FTDI programmer's com port)
+
+![alt text](https://github.com/AsifKhan991/ESP32_cam_image_based_motion_detector_and_email_sender/blob/main/board%20settings.PNG?raw=true)
+
 Note: 
   1) It's better to power up the esp32-cam module with seperate power source or it might cause brownout while processing frames
   2) Make sure your isp isn't blocking connection to smtp server.!
