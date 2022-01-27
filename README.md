@@ -1,4 +1,4 @@
-# ESP32-cam-image-based-motion-detector-and-email-sender
+# ESP32 cam image based motion detector and email sender. No SD card or SPIFFS required 
 ## This repository shows a method of detecting motion based on image frame difference only. No additional hardware needed. Also shows how to send the captured image using email without the need of SD card or SPIFFS. 
 
 ### board installation link : https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
