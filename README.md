@@ -17,7 +17,7 @@ How the mail looks like:
 How the motion triggering image looks like:
 
 ![alt text](https://github.com/AsifKhan991/ESP32_cam_image_based_motion_detector_and_email_sender/blob/main/capture.jpg?raw=true)
-tested in ESP-32 Ai-Thinker module
+<br>tested in ESP-32 Ai-Thinker module<br>
 Note: 
   1) It's better to power up the esp32-cam module with seperate power source or it might cause brownout while processing frames
   2) Make sure your ISP isn't blocking connection to smtp server!
